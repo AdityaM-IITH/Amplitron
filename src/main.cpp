@@ -41,6 +41,7 @@ static std::atomic<bool> g_running{true};
 
 #ifdef __EMSCRIPTEN__
 static Amplitron::GuiManager* g_gui = nullptr;
+static Amplitron::AudioEngine* g_engine_ptr = nullptr;
 
 static void em_main_loop() {
     if (!g_gui || !g_gui->run_frame()) {
@@ -87,6 +88,28 @@ extern "C" EMSCRIPTEN_KEEPALIVE void on_midi_device_connected(const char* device
     if (!g_gui || !device_name) return;
     
     emscripten_log(EM_LOG_INFO, "[MIDI] Device connected: %s", device_name);
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE const char* export_preset_json() {
+    static std::string exported_json;
+    if (!g_engine_ptr) return "";
+    try {
+        nlohmann::json state = g_engine_ptr->serialize();
+        exported_json = state.dump();
+        return exported_json.c_str();
+    } catch (...) {
+        return "";
+    }
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE void import_preset_json(const char* json_str) {
+    if (!g_engine_ptr || !json_str) return;
+    try {
+        nlohmann::json state = nlohmann::json::parse(json_str);
+        g_engine_ptr->deserialize(state);
+    } catch (...) {
+        emscripten_log(EM_LOG_ERROR, "[Web] Failed to parse imported preset JSON.");
+    }
 }
 #endif
 
@@ -157,6 +180,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Amplitron is ready. Let's play!" << std::endl;
 #ifdef __EMSCRIPTEN__
     g_gui = &gui;
+    g_engine_ptr = &engine;
     emscripten_set_main_loop(em_main_loop, 0, 1);
 #else
     while (g_running && gui.run_frame()) {
@@ -170,6 +194,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Shutting down..." << std::endl;
 #ifdef __EMSCRIPTEN__
     g_gui = nullptr;
+    g_engine_ptr = nullptr;
 #endif
     gui.shutdown();
     engine.shutdown();
