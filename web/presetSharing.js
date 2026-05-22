@@ -25,7 +25,9 @@ window.sharePresetToUrl = function () {
 
         // Update URL
         const url = new URL(window.location);
-        url.searchParams.set('preset', compressed);
+        const hashParams = new URLSearchParams(url.hash.replace('#', ''));
+        hashParams.set('preset', compressed);
+        url.hash = hashParams.toString();
         history.pushState(null, '', url);
 
         // Copy to clipboard
@@ -44,16 +46,20 @@ window.sharePresetToUrl = function () {
  * Detects incoming share parameters on load, decompresses the payload safely,
  * and re-hydrates the application state.
  */
+const MAX_COMPRESSED_PRESET_LEN = 12000;
+const MAX_DECOMPRESSED_PRESET_LEN = 500000;
+
 function hydrateSharedPreset() {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.location.hash.replace('#', ''));
     const presetPayload = params.get('preset');
 
     if (presetPayload) {
+        if (presetPayload.length > MAX_COMPRESSED_PRESET_LEN) return;
         try {
             console.log('[PresetShare] Shared preset detected. Decompressing...');
             const decompressedJson = LZString.decompressFromEncodedURIComponent(presetPayload);
             
-            if (decompressedJson) {
+            if (decompressedJson && decompressedJson.length <= MAX_DECOMPRESSED_PRESET_LEN) {
                 // Pass JSON string to C++ for deserialization
                 Module.ccall(
                     'import_preset_json',
@@ -65,7 +71,9 @@ function hydrateSharedPreset() {
                 
                 // Clear URL to prevent re-hydration on refresh
                 const url = new URL(window.location);
-                url.searchParams.delete('preset');
+                const hashParams = new URLSearchParams(url.hash.replace('#', ''));
+                hashParams.delete('preset');
+                url.hash = hashParams.toString();
                 history.replaceState(null, '', url);
             } else {
                 console.warn('[PresetShare] Decompression resulted in empty payload. Invalid URL?');
