@@ -400,11 +400,16 @@ TEST(json_audio_engine_autosave_roundtrip) {
     engine.deserialize(saved_state);
 
     // 5. Assert that everything was restored perfectly
-    ASSERT_TRUE(distortion->is_enabled());
-    ASSERT_NEAR(distortion->get_mix(), 0.85f, 0.001f); 
+    auto restored_effects = engine.effects();
+    ASSERT_GE(restored_effects.size(), 2u);
+    
+    auto restored_distortion = restored_effects[0];
+    ASSERT_TRUE(restored_distortion->is_enabled());
+    ASSERT_NEAR(restored_distortion->get_mix(), 0.85f, 0.001f); 
 
-    ASSERT_FALSE(reverb->is_enabled());
-    ASSERT_NEAR(reverb->get_mix(), 0.2f, 0.001f);
+    auto restored_reverb = restored_effects[1];
+    ASSERT_FALSE(restored_reverb->is_enabled());
+    ASSERT_NEAR(restored_reverb->get_mix(), 0.2f, 0.001f);
     
     engine.shutdown();
 }

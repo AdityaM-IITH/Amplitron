@@ -143,6 +143,13 @@ void AudioEngine::deserialize(const nlohmann::json& j) {
         
         main_graph_ = std::move(new_graph);
         
+        dummy_effects_.clear();
+        for (const auto& node : main_graph_.get_nodes()) {
+            if (node.pedal) {
+                dummy_effects_.push_back(node.pedal);
+            }
+        }
+        
         // Push topology to audio thread without deadlocking (we already hold effect_mutex_)
         auto new_executor = std::make_shared<AudioGraphExecutor>();
         new_executor->prepare(sample_rate_, buffer_size_, 32);
