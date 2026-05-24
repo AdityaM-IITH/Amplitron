@@ -91,29 +91,36 @@ void PedalBoard::render_signal_chain() {
         ui_state.node_positions.erase(id);
     }
 
-    // Give all new nodes a default position at the end of the chain without shifting existing nodes
+    // Give new nodes a default position at the end, unless they have saved coordinates
     for (const auto& node : audio_graph.get_nodes()) {
         if (ui_state.node_positions.find(node.id) == ui_state.node_positions.end()) {
-            float max_right = 40.0f;
-            for (const auto& existing_node : audio_graph.get_nodes()) {
-                auto pos_it = ui_state.node_positions.find(existing_node.id);
-                if (pos_it != ui_state.node_positions.end()) {
-                    float width = 110.0f;
-                    if (existing_node.routing_type == NodeRoutingType::StandardEffect) {
-                        if (existing_node.pedal && std::strcmp(existing_node.pedal->name(), "MultiBand Compressor") == 0) {
-                            width = 190.0f * 2.2f;
-                        } else {
-                            width = 190.0f;
+            if (node.x != 0.0f || node.y != 0.0f) {
+                ui_state.node_positions[node.id] = { ImVec2(node.x, node.y), false };
+            } else {
+                float max_right = 40.0f;
+                for (const auto& existing_node : audio_graph.get_nodes()) {
+                    auto pos_it = ui_state.node_positions.find(existing_node.id);
+                    if (pos_it != ui_state.node_positions.end()) {
+                        float width = 110.0f;
+                        if (existing_node.routing_type == NodeRoutingType::StandardEffect) {
+                            if (existing_node.pedal && std::strcmp(existing_node.pedal->name(), "MultiBand Compressor") == 0) {
+                                width = 190.0f * 2.2f;
+                            } else {
+                                width = 190.0f;
+                            }
+                        }
+                        float right_edge = pos_it->second.position.x + width;
+                        if (right_edge > max_right) {
+                            max_right = right_edge;
                         }
                     }
-                    float right_edge = pos_it->second.position.x + width;
-                    if (right_edge > max_right) {
-                        max_right = right_edge;
-                    }
                 }
+                float insert_x = ui_state.node_positions.empty() ? 40.0f : max_right + 80.0f;
+                ui_state.node_positions[node.id] = { ImVec2(insert_x, 60.0f), false };
             }
-            float insert_x = ui_state.node_positions.empty() ? 40.0f : max_right + 80.0f;
-            ui_state.node_positions[node.id] = { ImVec2(insert_x, 60.0f), false };
+        } else {
+            // Write manual dragging updates back to the audio engine so they serialize correctly
+            audio_graph.set_node_position(node.id, ui_state.node_positions[node.id].position.x, ui_state.node_positions[node.id].position.y);
         }
     }
 
@@ -286,8 +293,8 @@ void PedalBoard::render_signal_chain() {
         // ====================================================================
         // THE DELETION [X] BUTTON
         // ====================================================================
-        bool is_amp = (node.name == "Amp Sim"); 
-        bool is_input_node = (node.name == "Input");
+        bool is_amp = node.is_graph_output; 
+        bool is_input_node = node.is_graph_input || (node.name == "Input");
 
         if (!is_amp && !is_input_node) {
             ImVec2 cross_pos = ImVec2(node_screen_pos.x + node_width - 24.0f * ui_state.zoom, node_screen_pos.y + 4.0f * ui_state.zoom);

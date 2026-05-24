@@ -140,6 +140,17 @@ void AudioEngine::deserialize(const nlohmann::json& j) {
                 new_graph.add_link(pin_map[old_source], pin_map[old_dest]);
             }
         }
+        // Auto-heal missing output nodes (caused by bugs in the Modular Add Pedal logic)
+        bool has_output = false;
+        for (const auto& node : new_graph.get_nodes()) {
+            if (node.is_graph_output) {
+                has_output = true;
+                break;
+            }
+        }
+        if (!has_output && !new_graph.get_nodes().empty()) {
+            new_graph.set_node_as_output(new_graph.get_nodes().back().id, true);
+        }
         
         main_graph_ = std::move(new_graph);
         
