@@ -91,6 +91,6 @@ if (typeof Module !== 'undefined') {
         if (originalOnRuntimeInit) {
             originalOnRuntimeInit();
         }
-        hydrateSharedPreset();
+        setTimeout(hydrateSharedPreset, 500);
     };
 }
