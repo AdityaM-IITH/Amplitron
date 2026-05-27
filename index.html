@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Amplitron - Professional Guitar Amp Simulator</title>
+        <meta
+            name="description"
+            content="Amplitron is a professional guitar amp simulator with real-time audio processing, 12 studio-quality effects, amp modeling, and ultra-low latency. Available for Windows, macOS, Linux, and Web."
+        />
+        <link rel="icon" type="image/x-icon" href="favicon.ico" />
+        <link rel="icon" type="image/svg+xml" href="icon.svg" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="styles.css" />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+        />
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <!-- Sticky navbar -->
+        <nav id="navbar">
+            <div class="nav-logo">AMPLITRON</div>
+            <button class="hamburger" id="hamburger">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="#features">Features</a>
+                <a href="#downloads">Downloads</a>
+                <a href="#requirements">Requirements</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header>
+                <div class="header-icon">
+                    <img src="icon.svg" alt="Amplitron" />
+                </div>
+                <h1 class="logo">AMPLITRON</h1>
+                <p class="tagline">Professional Guitar Amp Simulator</p>
+                <p style="color: var(--text-dim); font-size: 1.1rem">
+                    Real-time audio processing • Ultra-low latency •
+                    Studio-quality effects
+                </p>
+                <div style="margin-top: 30px; text-align: center">
+                    <a href="demo/" class="download-btn"> ▶ Play Demo </a>
+                    <p class="download-caption">
+                        runs in your browser — no install
+                    </p>
+                    <!-- Guitar string visualization -->
+                    <div class="guitar-strings-container">
+                        <div class="string string-E"></div>
+                        <div class="string string-A"></div>
+                        <div class="string string-D"></div>
+                        <div class="string string-G"></div>
+                        <div class="string string-B"></div>
+                        <div class="string string-e"></div>
+                    </div>
+                    <div class="product-hunt-wrapper">
+                        <a
+                            href="https://www.producthunt.com/products/amplitron?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-amplitron"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="product-hunt-btn"
+                        >
+                            <img
+                                alt="Amplitron - Product Hunt"
+                                width="250"
+                                height="54"
+                                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1105240&theme=dark&t=1774378395088"
+                            />
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="hero">
+                <p
+                    style="
+                        font-size: 1.1rem;
+                        line-height: 1.8;
+                        color: var(--text-dim);
+                    "
+                >
+                    Amplitron is a professional-grade guitar amplifier simulator
+                    designed for musicians, producers, and audio enthusiasts.
+                    Experience studio-quality tone shaping with real-time
+                    processing, customizable effect chains, and ultra-low
+                    latency performance.
+                </p>
+            </div>
+
+        <section class="features-section" id="features">
+            <div class="section-header">
+                <h1>Transform Your Guitar Sound</h1>
+            </div>
+
+            <div class="features-grid">
+                <div class="features-card">
+                    <div class="icon-box">
+                        <span class="material-symbols-outlined">headphones</span>
+                    </div>
+
+                    <h3>Real-Time Processing</h3>
+
+                    <p>
+                        Ultra-low latency audio engine with configurable buffer sizes. Play through your computer with no noticeable delay.
+                    </p>
+                </div>
+
+                <div class="features-card">
+                    <div class="icon-box">
+                        <span class="material-symbols-outlined">favorite</span>
+                    </div>
+
+                    <h3>12 Studio Effects</h3>
+
+                    <p>
+                        Noise Gate, Compressor, Overdrive, Distortion, EQ, Amp Simulator (4 models), Cabinet Sim, Chorus, Delay, Reverb, Wah (manual & auto-wah), and Chromatic Tuner.
+                    </p>
+                </div>
+
+                <div class="features-card">
+                    <div class="icon-box">
+                        <span class="material-symbols-outlined">save</span>
+                    </div>
+
+                    <h3>Preset System</h3>
+
+                    <p>
+                        Save and load your favorite tones. Share presets with other musicians. Build your signature sound library.
+                    </p>
+                </div>
+
+                <div class="features-card">
+                    <div class="icon-box">
+                        <span class="material-symbols-outlined">music_note_2</span>
+                    </div>
+
+                    <h3>WAV Recording</h3>
+
+                    <p>
+                        Record your processed guitar output directly to WAV files. Capture your performances with the full effect chain applied.
+                    </p>
+                </div>
+
+                <div class="features-card">
+                    <div class="icon-box">
+                        <span class="material-symbols-outlined">design_services</span>
+                    </div>
+
+                    <h3>Beautiful Interface</h3>
+
+                    <p>
+                        Intuitive pedal board UI with visual feedback. Drag-and-drop effect ordering. Real-time level metering.
+                    </p>
+                </div>
+
+                <div class="features-card">
+                    <div class="icon-box">
+                        <span class="material-symbols-outlined">devices</span>
+                    </div>
+
+                    <h3>Cross-Platform</h3>
+
+                    <p>
+                        Native builds for Windows, macOS, and Linux, plus a browser-based web demo via WebAssembly. Optimized for each platform.
+                    </p>
+                </div>
+
+            </div>            
+          </section>
+
+            <div class="hero">
+                <h2>🎬 First Look & Demo</h2>
+                <p
+                    style="
+                        font-size: 1.1rem;
+                        line-height: 1.8;
+                        color: var(--text-dim);
+                        margin-bottom: 20px;
+                    "
+                >
+                    Watch the official demo video to see Amplitron in action.
+                    See the pedal board interface, effects in real-time, and
+                    hear the professional amp simulation.
+                </p>
+                <a
+                    href="https://youtu.be/OLGx1zYj0W4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="
+                        display: inline-block;
+                        background: linear-gradient(
+                            135deg,
+                            #c8a84a 0%,
+                            #e6c76a 100%
+                        );
+                        color: #1c1a18;
+                        padding: 16px 40px;
+                        border-radius: 8px;
+                        text-decoration: none;
+                        font-family: &quot;DM Sans&quot;, sans-serif;
+                        font-weight: 600;
+                        font-size: 1.1rem;
+                        transition:
+                            transform 0.2s,
+                            box-shadow 0.2s;
+                    "
+                >
+                    ▶ Watch on YouTube
+                </a>
+            </div>
+
+            <div class="downloads" id="downloads">
+                <h2>Download Amplitron</h2>
+
+                <div class="download-grid">
+                    <a
+                        href="https://github.com/sudip-mondal-2002/Amplitron/releases/latest/download/Amplitron-Windows-Setup.exe"
+                        class="download-link"
+                        download
+                    >
+                        <span class="download-platform">Windows</span>
+                        <span class="download-detail"
+                            >.exe installer, 64-bit</span
+                        >
+                    </a>
+
+                    <a
+                        href="https://github.com/sudip-mondal-2002/Amplitron/releases/latest/download/Amplitron-macOS.dmg"
+                        class="download-link"
+                        download
+                    >
+                        <span class="download-platform">macOS</span>
+                        <span class="download-detail"
+                            >.dmg disk image, Universal</span
+                        >
+                    </a>
+
+                    <a
+                        href="https://github.com/sudip-mondal-2002/Amplitron/releases/latest/download/Amplitron-Linux-x64.tar.gz"
+                        class="download-link"
+                        download
+                    >
+                        <span class="download-platform">Linux</span>
+                        <span class="download-detail"
+                            >.tar.gz archive, 64-bit</span
+                        >
+                    </a>
+                </div>
+            </div>
+
+            <div class="requirements" id="requirements">
+                <h3>System Requirements</h3>
+                <ul>
+                    <li>
+                        <strong>Audio Interface:</strong> Any
+                        PortAudio-compatible device (ASIO, WASAPI, CoreAudio,
+                        ALSA)
+                    </li>
+                    <li>
+                        <strong>RAM:</strong> 512 MB minimum, 1 GB recommended
+                    </li>
+                    <li><strong>CPU:</strong> Dual-core processor or better</li>
+                    <li>
+                        <strong>Display:</strong> 1280×720 minimum resolution
+                    </li>
+                    <li>
+                        <strong>Input:</strong> Guitar with 1/4" cable and audio
+                        interface, or USB guitar cable
+                    </li>
+                </ul>
+            </div>
+
+            <div class="installation">
+                <h2>Installation Instructions</h2>
+
+                <div class="install-steps">
+                    <h4>Windows</h4>
+                    <ol>
+                        <li>
+                            Download <code>Amplitron-Windows-Setup.exe</code>
+                        </li>
+                        <li>
+                            Run the installer &mdash; if SmartScreen appears,
+                            click <strong>&ldquo;More info&rdquo;</strong> then
+                            <strong>&ldquo;Run anyway&rdquo;</strong>
+                        </li>
+                        <li>Follow the setup wizard</li>
+                        <li>
+                            Launch from the <strong>Start Menu</strong> or
+                            <strong>Desktop shortcut</strong>
+                        </li>
+                        <li>
+                            Connect your guitar interface and start playing!
+                        </li>
+                    </ol>
+                    <p
+                        style="
+                            margin-top: 12px;
+                            font-size: 0.85rem;
+                            color: var(--text-dim);
+                        "
+                    >
+                        To uninstall, use
+                        <strong>Add or Remove Programs</strong> in Windows
+                        Settings.
+                    </p>
+                </div>
+
+                <div class="install-steps">
+                    <h4>macOS</h4>
+                    <ol>
+                        <li>Download <code>Amplitron-macOS.dmg</code></li>
+                        <li>
+                            Open the disk image and drag
+                            <strong>Amplitron</strong> to
+                            <strong>Applications</strong>
+                        </li>
+                        <li>
+                            <strong>First launch</strong>: Right-click the app
+                            &rarr; select
+                            <strong>&ldquo;Open&rdquo;</strong> &rarr; click
+                            <strong>&ldquo;Open&rdquo;</strong> in the dialog
+                        </li>
+                        <li>Grant microphone permissions when prompted</li>
+                    </ol>
+                    <p
+                        style="
+                            margin-top: 12px;
+                            font-size: 0.85rem;
+                            color: var(--text-dim);
+                        "
+                    >
+                        If macOS says the app is damaged, open Terminal and
+                        run:<br />
+                        <code>xattr -cr /Applications/Amplitron.app</code>
+                    </p>
+                </div>
+
+                <div class="install-steps">
+                    <h4>Linux</h4>
+                    <ol>
+                        <li>
+                            Install dependencies: <br /><code
+                                >sudo apt install libportaudio2
+                                libsdl2-2.0-0</code
+                            >
+                            (Ubuntu/Debian) <br /><code
+                                >sudo dnf install portaudio SDL2</code
+                            >
+                            (Fedora) <br /><code
+                                >sudo pacman -S portaudio sdl2</code
+                            >
+                            (Arch)
+                        </li>
+                        <li>
+                            Download <code>Amplitron-Linux-x64.tar.gz</code>
+                        </li>
+                        <li>
+                            Extract:
+                            <code>tar -xzf Amplitron-Linux-x64.tar.gz</code>
+                        </li>
+                        <li>
+                            Run:
+                            <code>cd Amplitron-Linux && ./amplitron.sh</code>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="hero">
+                <h2>Open Source & Free</h2>
+                <p
+                    style="
+                        font-size: 1.1rem;
+                        line-height: 1.8;
+                        color: var(--text-dim);
+                        margin-bottom: 20px;
+                    "
+                >
+                    Amplitron is completely free and open source. Contributions,
+                    bug reports, and feature requests are welcome on GitHub.
+                    Built with C++17, PortAudio, SDL2, and Dear ImGui.
+                </p>
+                <a
+                    href="https://github.com/sudip-mondal-2002/Amplitron"
+                    style="
+                        display: inline-block;
+                        background: var(--brown-dark);
+                        color: var(--gold);
+                        padding: 12px 30px;
+                        border-radius: 8px;
+                        text-decoration: none;
+                        font-weight: 600;
+                        border: 2px solid var(--gold);
+                    "
+                >
+                    View on GitHub →
+                </a>
+            </div>
+
+            <footer id="contact">
+                <p style="font-size: 1.2rem; margin-bottom: 20px">
+                    <strong>Amplitron</strong> - Professional Guitar Amp
+                    Simulator
+                </p>
+                <p>
+                    Developed by
+                    <a href="https://github.com/sudip-mondal-2002"
+                        >Sudip Mondal</a
+                    >
+                </p>
+                <p>
+                    Contact:
+                    <a href="mailto:sudmondal2002@gmail.com"
+                        >sudmondal2002@gmail.com</a
+                    >
+                </p>
+                <p style="margin-top: 20px; font-size: 0.9rem">
+                    &copy; 2026 Amplitron. Released under the MIT License.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>
