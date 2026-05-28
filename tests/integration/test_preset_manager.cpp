@@ -1017,6 +1017,6 @@ TEST_F(PresetTest, manager_preset_to_json_string) {
   ASSERT_TRUE(std::any_of(parsed["nodes"].begin(), parsed["nodes"].end(),
                           [](const auto& node) {
                             return node.contains("type") &&
-                                   node["type"].get<std::string>() == "overdrive";
+                                   node["type"].template get<std::string>() == "overdrive";
                           }));
 }
