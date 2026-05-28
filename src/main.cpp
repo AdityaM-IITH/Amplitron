@@ -96,8 +96,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE const char* export_preset_json() {
     static std::string exported_json;
     if (!g_engine_ptr) return "";
     try {
-        nlohmann::json state = g_engine_ptr->serialize();
-        exported_json = state.dump();
+        exported_json = Amplitron::PresetManager::preset_to_json_string(*g_engine_ptr);
         return exported_json.c_str();
     } catch (...) {
         return "";
@@ -107,8 +106,29 @@ extern "C" EMSCRIPTEN_KEEPALIVE const char* export_preset_json() {
 extern "C" EMSCRIPTEN_KEEPALIVE void import_preset_json(const char* json_str) {
     if (!g_engine_ptr || !json_str) return;
     try {
-        nlohmann::json state = nlohmann::json::parse(json_str);
-        g_engine_ptr->deserialize(state);
+        Amplitron::PresetData preset;
+        if (!Amplitron::from_json_ext(json_str, preset)) {
+            emscripten_log(EM_LOG_ERROR, "[Web] Failed to parse imported preset JSON.");
+            return;
+        }
+
+        g_engine_ptr->clear_effects();
+        g_engine_ptr->set_input_gain(preset.input_gain);
+        g_engine_ptr->set_output_gain(preset.output_gain);
+
+        if (preset.routing == "graph") {
+            std::string repackaged_json = Amplitron::to_json_ext(preset);
+            if (Amplitron::PresetManager::graph_from_json(repackaged_json, g_engine_ptr->graph())) {
+                std::vector<std::shared_ptr<Amplitron::Effect>> loaded_effects;
+                for (const auto& node : g_engine_ptr->graph().get_nodes()) {
+                    if (node.routing_type == Amplitron::NodeRoutingType::StandardEffect && node.pedal != nullptr) {
+                        loaded_effects.push_back(node.pedal);
+                    }
+                }
+                g_engine_ptr->restore_effects_state(loaded_effects);
+                g_engine_ptr->commit_graph_changes();
+            }
+        }
     } catch (...) {
         emscripten_log(EM_LOG_ERROR, "[Web] Failed to parse imported preset JSON.");
     }

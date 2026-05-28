@@ -67,6 +67,9 @@ public:
                             AudioEngine& engine,
                             MidiManager* midi_manager = nullptr);
 
+    // Serialize full preset to JSON string
+    static std::string preset_to_json_string(AudioEngine& engine);
+
     // Serialize current graph to JSON
     static std::string graph_to_json(const AudioGraph& graph);
 
