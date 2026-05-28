@@ -427,6 +427,15 @@ bool PresetManager::graph_from_json(const std::string &json,
         GuiGraphState::get_instance().node_positions[existing_id] = {
             ImVec2(node.x, node.y), false};
         node_id_map[node.id] = existing_id;
+        
+        if (t == "Input") {
+          graph.set_node_as_input(existing_id, true);
+          graph.set_node_as_output(existing_id, false);
+        } else if (t == "Output") {
+          graph.set_node_as_input(existing_id, false);
+          graph.set_node_as_output(existing_id, true);
+        }
+        
         continue;
       }
     }

@@ -139,6 +139,17 @@ void GuiManager::render_menu_bar() {
                     toast_timer_ = 2.0f;
                 }
             }
+#ifdef __EMSCRIPTEN__
+            if (ImGui::MenuItem("Share current pedalboard")) {
+                EM_ASM(
+                    if (typeof window.sharePresetToUrl === 'function') {
+                        window.sharePresetToUrl();
+                    }
+                );
+                toast_message_ = "Link copied to clipboard!";
+                toast_timer_ = 2.0f;
+            }
+#endif
             ImGui::Separator();
 #ifndef AMPLITRON_NO_DESKTOP_SHELL
             if (ImGui::MenuItem("Change Presets Directory...")) {

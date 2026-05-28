@@ -50,6 +50,7 @@ public:
     bool initialize(int width = 1280, int height = 720);
     void shutdown();
     bool run_frame();
+    void force_rebuild_pedal_widgets();
 
     MidiManager& midi_manager() { return midi_manager_; }
     AudioEngine& audio_engine() { return engine_; }

@@ -246,4 +246,10 @@ void GuiManager::shutdown() {
     SDL_Quit();
 }
 
+void GuiManager::force_rebuild_pedal_widgets() {
+    if (pedal_board_) {
+        pedal_board_->rebuild_widgets();
+    }
+}
+
 } // namespace Amplitron

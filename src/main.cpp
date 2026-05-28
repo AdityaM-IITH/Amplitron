@@ -137,6 +137,9 @@ extern "C" EMSCRIPTEN_KEEPALIVE void import_preset_json(const char* json_str) {
                 }
                 g_engine_ptr->restore_effects_state(loaded_effects);
                 g_engine_ptr->commit_graph_changes();
+                if (g_gui) {
+                    g_gui->force_rebuild_pedal_widgets();
+                }
             }
         }
     } catch (...) {
