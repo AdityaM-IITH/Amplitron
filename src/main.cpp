@@ -309,6 +309,14 @@ int main(int argc, char* argv[]) {
 #ifdef __EMSCRIPTEN__
     g_gui = &gui;
     g_engine_ptr = &engine;
+
+    // Synchronously hydrate preset before the first frame is rendered
+    EM_ASM(
+        if (typeof window.hydrateSharedPreset === 'function') {
+            window.hydrateSharedPreset();
+        }
+    );
+
     emscripten_set_main_loop(em_main_loop, 0, 1);
 #else
     while (g_running && gui.run_frame()) {

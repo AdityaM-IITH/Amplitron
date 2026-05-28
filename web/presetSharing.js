@@ -49,7 +49,7 @@ window.sharePresetToUrl = function () {
 const MAX_COMPRESSED_PRESET_LEN = 12000;
 const MAX_DECOMPRESSED_PRESET_LEN = 500000;
 
-function hydrateSharedPreset() {
+window.hydrateSharedPreset = function() {
     const params = new URLSearchParams(window.location.hash.replace('#', ''));
     const presetPayload = params.get('preset');
 
@@ -82,15 +82,4 @@ function hydrateSharedPreset() {
             console.error('[PresetShare] Failed to hydrate preset:', err);
         }
     }
-}
-
-// Hook into Module.onRuntimeInitialized so that C++ is ready before we hydrate
-if (typeof Module !== 'undefined') {
-    const originalOnRuntimeInit = Module.onRuntimeInitialized;
-    Module.onRuntimeInitialized = function () {
-        if (originalOnRuntimeInit) {
-            originalOnRuntimeInit();
-        }
-        setTimeout(hydrateSharedPreset, 500);
-    };
-}
+};
