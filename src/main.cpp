@@ -3,6 +3,7 @@
 #include "gui/gui_manager.h"
 #include "gui/state/gui_graph_state.h"
 #include "preset_manager.h"
+#include "presets/preset_json.h"
 #include "cli.h"
 
 #include "audio/effects/noise_gate.h"
