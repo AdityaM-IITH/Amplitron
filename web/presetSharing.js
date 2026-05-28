@@ -26,7 +26,7 @@ window.sharePresetToUrl = function (jsonStr) {
         // Generate the shareable string
         let shareableUrl = url.toString();
         if (shareableUrl.includes('localhost') || shareableUrl.includes('127.0.0.1')) {
-            const prodBase = 'https://sudip-mondal-2002.github.io/Amplitron/';
+            const prodBase = 'https://sudip-mondal-2002.github.io/Amplitron/demo/';
             shareableUrl = prodBase + url.hash;
         }
 
