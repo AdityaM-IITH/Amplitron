@@ -58,6 +58,10 @@ public:
   // Topological Order & Loop Validation Core
   bool rebuild_topology();
 
+  // For Undo/Redo System (forces cache reload)
+  void restore_node(const DSPNode& node);
+  void restore_link(const GraphLink& link);
+
   // Accessors
   const std::vector<int> &get_sorted_nodes() const { return sorted_node_ids_; }
   const std::vector<DSPNode> &get_nodes() const { return nodes_; }

@@ -69,10 +69,10 @@ bool AudioEngine::set_input_device(int device_index) {
         return false;
     }
 
-    if (!devices_share_host_api(device_index, output_device_)) {
-        const PaDeviceInfo* out_info = Pa_GetDeviceInfo(output_device_);
+    const PaDeviceInfo* out_info = Pa_GetDeviceInfo(output_device_);
+    if (out_info && info->hostApi != out_info->hostApi) {
         const PaHostApiInfo* in_api = Pa_GetHostApiInfo(info->hostApi);
-        const PaHostApiInfo* out_api = out_info ? Pa_GetHostApiInfo(out_info->hostApi) : nullptr;
+        const PaHostApiInfo* out_api = Pa_GetHostApiInfo(out_info->hostApi);
         std::cerr << "[Amplitron] Warning: Input (" << (in_api ? in_api->name : "?")
                   << ") and output (" << (out_api ? out_api->name : "?")
                   << ") are on different host APIs. Stream may fail." << std::endl;
@@ -105,9 +105,9 @@ bool AudioEngine::set_output_device(int device_index) {
         return false;
     }
 
-    if (!devices_share_host_api(input_device_, device_index)) {
-        const PaDeviceInfo* in_info = Pa_GetDeviceInfo(input_device_);
-        const PaHostApiInfo* in_api = in_info ? Pa_GetHostApiInfo(in_info->hostApi) : nullptr;
+    const PaDeviceInfo* in_info = Pa_GetDeviceInfo(input_device_);
+    if (in_info && in_info->hostApi != info->hostApi) {
+        const PaHostApiInfo* in_api = Pa_GetHostApiInfo(in_info->hostApi);
         const PaHostApiInfo* out_api = Pa_GetHostApiInfo(info->hostApi);
         std::cerr << "[Amplitron] Warning: Input (" << (in_api ? in_api->name : "?")
                   << ") and output (" << (out_api ? out_api->name : "?")

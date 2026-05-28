@@ -1,6 +1,8 @@
 #pragma once
 
 #include "gui/commands/command_base.h"
+#include "audio/engine/audio_engine.h"
+#include "audio/effects/effect.h"
 #include <chrono>
 
 namespace Amplitron {
@@ -28,7 +30,7 @@ public:
           param_index_(param_index), old_value_(old_value), new_value_(new_value) {}
 
     /** @brief Set the parameter to new_value_. */
-    void execute() override {
+    bool execute() override {
         auto& params = effect_->params();
         if (param_index_ >= 0 && param_index_ < static_cast<int>(params.size())) {
             params[param_index_].value = new_value_;
@@ -39,6 +41,7 @@ public:
             }
             if (idx >= 0) engine_.push_param_change(idx, param_index_, new_value_);
         }
+        return true;
     }
 
     /** @brief Restore the parameter to old_value_. */

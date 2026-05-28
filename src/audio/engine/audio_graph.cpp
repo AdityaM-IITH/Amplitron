@@ -320,4 +320,28 @@ const DSPNode *AudioGraph::find_node(int node_id) const {
   return nullptr;
 }
 
+void AudioGraph::restore_node(const DSPNode& node) {
+  nodes_.push_back(node);
+  if (node.id >= next_id_) next_id_ = node.id + 1;
+  for (int pin : node.input_pin_ids) {
+      if (pin >= next_id_) next_id_ = pin + 1;
+  }
+  for (int pin : node.output_pin_ids) {
+      if (pin >= next_id_) next_id_ = pin + 1;
+  }
+  rebuild_topology();
+}
+
+void AudioGraph::restore_link(const GraphLink& link) {
+  int prev_next_id = next_id_;
+  links_.push_back(link);
+  if (link.id >= next_id_) next_id_ = link.id + 1;
+  if (!rebuild_topology()) {
+      links_.pop_back();
+      next_id_ = prev_next_id;
+      rebuild_topology();
+  }
+}
+
+
 } // namespace Amplitron

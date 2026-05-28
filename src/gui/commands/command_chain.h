@@ -1,6 +1,8 @@
 #pragma once
 
 #include "gui/commands/command_base.h"
+#include "audio/engine/audio_engine.h"
+#include "audio/effects/effect.h"
 #include <cstring>
 #include <algorithm>
 
@@ -22,7 +24,7 @@ public:
         : engine_(engine), effect_(std::move(effect)) {}
 
     /** @brief Append the effect to the engine's chain (before the amp if present). */
-    void execute() override {
+    bool execute() override {
         int amp_idx = -1;
         auto& fx = engine_.effects();
         for (int i = 0; i < static_cast<int>(fx.size()); ++i) {
@@ -36,6 +38,7 @@ public:
         } else {
             engine_.add_effect(effect_);
         }
+        return true;
     }
 
     /** @brief Remove the previously added effect from the chain. */
@@ -82,8 +85,9 @@ public:
     }
 
     /** @brief Remove the effect at the stored index. */
-    void execute() override {
+    bool execute() override {
         engine_.remove_effect(index_);
+        return true;
     }
 
     /** @brief Re-insert the captured effect at its original chain position. */

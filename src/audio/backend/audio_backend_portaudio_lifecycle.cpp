@@ -17,9 +17,6 @@
 
 namespace Amplitron {
 
-
-
-
 // PortAudio callback
 int pa_audio_callback(const void* input, void* output,
                               unsigned long frame_count,

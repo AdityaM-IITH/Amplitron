@@ -9,6 +9,7 @@ namespace Amplitron {
 struct NodeLayoutState {
     ImVec2 position;
     bool is_dragging = false;
+    ImVec2 drag_start_pos;
 };
 
 class GuiGraphState {
@@ -39,7 +40,7 @@ public:
 
     void set_default_position_if_missing(int node_id, float default_x, float default_y) {
         if (node_positions.find(node_id) == node_positions.end()) {
-            node_positions[node_id] = { ImVec2(default_x, default_y), false };
+            node_positions[node_id] = { ImVec2(default_x, default_y), false, ImVec2(0, 0) };
         }
     }
 };

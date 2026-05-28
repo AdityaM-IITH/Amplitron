@@ -1,6 +1,8 @@
 #pragma once
 
 #include "gui/commands/command_base.h"
+#include "audio/engine/audio_engine.h"
+#include "audio/effects/effect.h"
 #include <vector>
 
 namespace Amplitron {
@@ -19,10 +21,11 @@ public:
         }
     }
 
-    void execute() override {
+    bool execute() override {
         while (!engine_.effects().empty()) {
             engine_.remove_effect(static_cast<int>(engine_.effects().size()) - 1);
         }
+        return true;
     }
 
     void undo() override {

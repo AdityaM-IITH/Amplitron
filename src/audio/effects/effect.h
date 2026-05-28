@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <atomic>
 #include <nlohmann/json.hpp>
 
 namespace Amplitron {
@@ -101,13 +102,13 @@ public:
         for (const auto& p : p_list) {
             j[p.name] = p.value;
         }
-        j["enabled"] = enabled_;
+        j["enabled"] = enabled_.load();
         j["mix"] = mix_;
         return j;
     }
 
     virtual void set_params(const nlohmann::json& j) {
-        if (j.contains("enabled")) enabled_ = j["enabled"];
+        if (j.contains("enabled")) enabled_.store(j["enabled"].get<bool>());
         if (j.contains("mix")) mix_ = j["mix"];
         
         auto& p_list = params();
@@ -120,7 +121,7 @@ public:
 
 protected:
     int sample_rate_ = DEFAULT_SAMPLE_RATE;
-    bool enabled_ = true;
+    std::atomic<bool> enabled_{true};
     float mix_ = 1.0f;
 
     // Wet/dry mix helper

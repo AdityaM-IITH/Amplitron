@@ -12,5 +12,4 @@ struct AudioBackendState {
     PaStream* stream = nullptr;
 };
 
-
 } // namespace Amplitron

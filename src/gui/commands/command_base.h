@@ -15,8 +15,8 @@ class Command {
 public:
     virtual ~Command() = default;
 
-    /** @brief Apply this command's action. */
-    virtual void execute() = 0;
+    /** @brief Apply this command's action. Returns true if a mutation occurred. */
+    virtual bool execute() { return true; }
 
     /** @brief Reverse this command's action. */
     virtual void undo() = 0;

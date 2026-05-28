@@ -10,3 +10,4 @@
 #include "gui/commands/command_preset.h"
 #include "gui/commands/command_clear.h"
 #include "gui/commands/command_reset.h"
+#include "gui/commands/command_graph.h"

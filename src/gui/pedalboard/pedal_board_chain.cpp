@@ -186,10 +186,17 @@ void PedalBoard::render_signal_chain() {
             ImGui::SetNextItemAllowOverlap(); 
             ImGui::InvisibleButton("native_drag_handle", ImVec2(node_width - 25.0f * ui_state.zoom, 30.0f * ui_state.zoom));
             if (!ui_state.hand_tool_active && ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
-                float mdx = ImGui::GetIO().MousePos.x - ImGui::GetIO().MousePosPrev.x;
-                float mdy = ImGui::GetIO().MousePos.y - ImGui::GetIO().MousePosPrev.y;
-                node_layout.position.x += mdx / ui_state.zoom;
-                node_layout.position.y += mdy / ui_state.zoom;
+                if (!node_layout.is_dragging) {
+                    node_layout.is_dragging = true;
+                    node_layout.drag_start_pos = node_layout.position;
+                }
+                node_layout.position.x += ImGui::GetIO().MouseDelta.x / ui_state.zoom;
+                node_layout.position.y += ImGui::GetIO().MouseDelta.y / ui_state.zoom;
+            } else if (node_layout.is_dragging && ImGui::IsItemDeactivated()) {
+                node_layout.is_dragging = false;
+                if (node_layout.position.x != node_layout.drag_start_pos.x || node_layout.position.y != node_layout.drag_start_pos.y) {
+                    history_.push_executed(std::make_unique<MoveGraphNodeCommand>(node.id, node_layout.drag_start_pos, node_layout.position));
+                }
             }
         } else {
             ImVec2 node_end = ImVec2(node_screen_pos.x + node_width, node_screen_pos.y + node_height);
@@ -200,10 +207,17 @@ void PedalBoard::render_signal_chain() {
             ImGui::SetNextItemAllowOverlap();
             ImGui::InvisibleButton("util_drag_handle", ImVec2(node_width - 25.0f * ui_state.zoom, node_height));
             if (!ui_state.hand_tool_active && ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
-                float mdx = ImGui::GetIO().MousePos.x - ImGui::GetIO().MousePosPrev.x;
-                float mdy = ImGui::GetIO().MousePos.y - ImGui::GetIO().MousePosPrev.y;
-                node_layout.position.x += mdx / ui_state.zoom;
-                node_layout.position.y += mdy / ui_state.zoom;
+                if (!node_layout.is_dragging) {
+                    node_layout.is_dragging = true;
+                    node_layout.drag_start_pos = node_layout.position;
+                }
+                node_layout.position.x += ImGui::GetIO().MouseDelta.x / ui_state.zoom;
+                node_layout.position.y += ImGui::GetIO().MouseDelta.y / ui_state.zoom;
+            } else if (node_layout.is_dragging && ImGui::IsItemDeactivated()) {
+                node_layout.is_dragging = false;
+                if (node_layout.position.x != node_layout.drag_start_pos.x || node_layout.position.y != node_layout.drag_start_pos.y) {
+                    history_.push_executed(std::make_unique<MoveGraphNodeCommand>(node.id, node_layout.drag_start_pos, node_layout.position));
+                }
             }
             ImVec2 text_pos = ImVec2(node_screen_pos.x + 12.0f * ui_state.zoom, node_screen_pos.y + 25.0f * ui_state.zoom);
             ImGui::SetWindowFontScale(ui_state.zoom);
@@ -352,9 +366,7 @@ void PedalBoard::render_signal_chain() {
                 if (dist_sq < pow(15.0f * ui_state.zoom, 2) && ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
                     printf("MANUAL DROP HOVER DETECTED! src: %d, dest: %d\n", ui_state.active_src_pin_id, pin_id);
                     if (ui_state.active_src_pin_id != -1) {
-                        int res = audio_graph.add_link(ui_state.active_src_pin_id, pin_id);
-                        printf("add_link returned: %d\n", res);
-                        engine_.commit_graph_changes();
+                        history_.execute(std::make_unique<AddGraphLinkCommand>(engine_, ui_state.active_src_pin_id, pin_id));
                         ui_state.active_src_pin_id = -1;
                     }
                 }
@@ -385,15 +397,12 @@ void PedalBoard::render_signal_chain() {
                         ui_state.active_src_pin_id = pin_id;
                         ui_state.active_src_pin_pos = pin_pos;
                     } else if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-                        bool deleted_any = false;
                         auto links = audio_graph.get_links(); // copy
                         for (const auto& l : links) {
                             if (l.source_pin_id == pin_id) {
-                                audio_graph.remove_link(l.id);
-                                deleted_any = true;
+                                history_.execute(std::make_unique<RemoveGraphLinkCommand>(engine_, l));
                             }
                         }
-                        if (deleted_any) engine_.commit_graph_changes();
                     }
                 }
                 ImGui::PopID();
@@ -414,8 +423,7 @@ void PedalBoard::render_signal_chain() {
                 }
             }
         } else if (node_ptr) {
-            audio_graph.remove_node(node_to_delete);
-            engine_.commit_graph_changes();
+            history_.execute(std::make_unique<RemoveGraphNodeCommand>(engine_, node_to_delete, node_ptr->routing_type, ui_state.node_positions[node_to_delete].position));
         }
         ui_state.node_positions.erase(node_to_delete);
         ui_state.active_src_pin_id = -1; // avoid stale pin state after topology change
@@ -467,8 +475,12 @@ void PedalBoard::render_signal_chain() {
     }
     
     if (link_to_delete != -1) {
-        audio_graph.remove_link(link_to_delete);
-        engine_.commit_graph_changes();
+        for (const auto& l : audio_graph.get_links()) {
+            if (l.id == link_to_delete) {
+                history_.execute(std::make_unique<RemoveGraphLinkCommand>(engine_, l));
+                break;
+            }
+        }
     }
     // Draw Wire Spline Drafting
     if (ui_state.active_src_pin_id != -1) {
