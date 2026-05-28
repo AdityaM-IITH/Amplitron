@@ -6,40 +6,66 @@
  */
 
 // Global sharing function to be called from UI (or manually via console)
-window.sharePresetToUrl = function () {
-    if (typeof Module === 'undefined' || !Module.ccall) {
-        console.error('[PresetShare] WASM module not ready.');
-        return;
-    }
-
+window.sharePresetToUrl = function (jsonStr) {
     try {
-        // Retrieve JSON state from C++ AudioEngine
-        const jsonStr = UTF8ToString(Module.ccall('export_preset_json', 'number', [], []));
         if (!jsonStr) {
-            console.error('[PresetShare] Failed to retrieve preset JSON from engine.');
+            console.error('[PresetShare] Empty preset JSON provided.');
             return;
         }
 
         // Compress using lz-string
         const compressed = LZString.compressToEncodedURIComponent(jsonStr);
 
-        // Update URL
+        // Update URL hash
         const url = new URL(window.location);
         const hashParams = new URLSearchParams(url.hash.replace('#', ''));
         hashParams.set('preset', compressed);
         url.hash = hashParams.toString();
         history.pushState(null, '', url);
 
+        // Generate the shareable string
+        let shareableUrl = url.toString();
+        if (shareableUrl.includes('localhost') || shareableUrl.includes('127.0.0.1')) {
+            const prodBase = 'https://sudip-mondal-2002.github.io/Amplitron/';
+            shareableUrl = prodBase + url.hash;
+        }
+
         // Copy to clipboard
-        navigator.clipboard.writeText(url.toString()).then(() => {
-            console.log('[PresetShare] URL copied to clipboard.');
-        }).catch(err => {
-            console.error('[PresetShare] Clipboard write failed:', err);
-        });
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(shareableUrl).then(() => {
+                console.log('[PresetShare] URL copied to clipboard.');
+            }).catch(err => {
+                console.error('[PresetShare] Clipboard write failed:', err);
+                fallbackCopyTextToClipboard(shareableUrl);
+            });
+        } else {
+            fallbackCopyTextToClipboard(shareableUrl);
+        }
     } catch (err) {
         console.error('[PresetShare] Error during preset sharing:', err);
     }
 };
+
+function fallbackCopyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('[PresetShare] Fallback copy ' + msg);
+    } catch (err) {
+        console.error('[PresetShare] Fallback copy failed', err);
+    }
+    document.body.removeChild(textArea);
+}
 
 /**
  * Hydration Hook

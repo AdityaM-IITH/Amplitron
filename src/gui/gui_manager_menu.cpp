@@ -141,13 +141,16 @@ void GuiManager::render_menu_bar() {
             }
 #ifdef __EMSCRIPTEN__
             if (ImGui::MenuItem("Share current pedalboard")) {
-                EM_ASM(
-                    if (typeof window.sharePresetToUrl === 'function') {
-                        window.sharePresetToUrl();
-                    }
-                );
-                toast_message_ = "Link copied to clipboard!";
-                toast_timer_ = 2.0f;
+                std::string json_string = gui_presets_.serialise_current_preset_to_json();
+                if (!json_string.empty()) {
+                    EM_ASM({
+                        if (typeof window.sharePresetToUrl === 'function') {
+                            window.sharePresetToUrl(UTF8ToString($0));
+                        }
+                    }, json_string.c_str());
+                    toast_message_ = "Link copied to clipboard!";
+                    toast_timer_ = 2.0f;
+                }
             }
 #endif
             ImGui::Separator();
