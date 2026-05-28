@@ -646,6 +646,7 @@ void ScreenComponent::render_multiband_compressor_display(ImDrawList* dl, ImVec2
 
     // --- REUSABLE SLIDER HELPER (LAMBDA) ---
     auto render_xover_slider = [&](ImDrawList* dl, float track_x, int pi, const char* label_prefix, bool ticks_on_left) {
+        (void)ticks_on_left;
         auto& param = params[pi];
         char label[64];
         std::snprintf(label, sizeof(label), "##slider_%s_%d_%d_%s", props.effect->name(), props.index, pi, label_prefix);
