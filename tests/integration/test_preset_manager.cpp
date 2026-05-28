@@ -998,3 +998,19 @@ TEST_F(PresetTest, save_graph_all_fields) {
 
   engine2.shutdown();
 }
+
+TEST_F(PresetTest, manager_preset_to_json_string) {
+  GuiGraphState::get_instance().node_positions.clear();
+  engine.clear_effects();
+  auto od = std::make_shared<Overdrive>();
+  engine.add_effect(od);
+  engine.set_input_gain(0.77f);
+  engine.set_output_gain(0.88f);
+  
+  std::string json = PresetManager::preset_to_json_string(engine);
+  
+  // Verify basic global fields and nodes
+  ASSERT_TRUE(json.find("\"input_gain\": 0.77") != std::string::npos || json.find("\"input_gain\":0.77") != std::string::npos);
+  ASSERT_TRUE(json.find("\"output_gain\": 0.88") != std::string::npos || json.find("\"output_gain\":0.88") != std::string::npos);
+  ASSERT_TRUE(json.find("overdrive") != std::string::npos || json.find("Overdrive") != std::string::npos);
+}
