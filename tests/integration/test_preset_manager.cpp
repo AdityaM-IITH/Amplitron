@@ -1010,7 +1010,13 @@ TEST_F(PresetTest, manager_preset_to_json_string) {
   std::string json = PresetManager::preset_to_json_string(engine);
   
   // Verify basic global fields and nodes
-  ASSERT_TRUE(json.find("\"input_gain\": 0.77") != std::string::npos || json.find("\"input_gain\":0.77") != std::string::npos);
-  ASSERT_TRUE(json.find("\"output_gain\": 0.88") != std::string::npos || json.find("\"output_gain\":0.88") != std::string::npos);
-  ASSERT_TRUE(json.find("overdrive") != std::string::npos || json.find("Overdrive") != std::string::npos);
+  auto parsed = nlohmann::json::parse(json);
+  ASSERT_NEAR(parsed["input_gain"].get<float>(), 0.77f, 1e-5f);
+  ASSERT_NEAR(parsed["output_gain"].get<float>(), 0.88f, 1e-5f);
+  ASSERT_TRUE(parsed.contains("nodes"));
+  ASSERT_TRUE(std::any_of(parsed["nodes"].begin(), parsed["nodes"].end(),
+                          [](const auto& node) {
+                            return node.contains("type") &&
+                                   node["type"].get<std::string>() == "overdrive";
+                          }));
 }
