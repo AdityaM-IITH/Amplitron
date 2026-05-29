@@ -21,8 +21,6 @@ window.sharePresetToUrl = function (jsonStr) {
         const hashParams = new URLSearchParams(url.hash.replace('#', ''));
         hashParams.set('preset', compressed);
         url.hash = hashParams.toString();
-        history.pushState(null, '', url);
-
         // Generate the shareable string
         let shareableUrl = url.toString();
         if (shareableUrl.includes('localhost') || shareableUrl.includes('127.0.0.1')) {
@@ -30,7 +28,7 @@ window.sharePresetToUrl = function (jsonStr) {
             shareableUrl = prodBase + url.hash;
         }
 
-        // Copy to clipboard
+        // Copy to clipboard FIRST to avoid history.pushState consuming the user activation token
         if (navigator.clipboard && window.isSecureContext) {
             navigator.clipboard.writeText(shareableUrl).then(() => {
                 console.log('[PresetShare] URL copied to clipboard.');
@@ -41,6 +39,9 @@ window.sharePresetToUrl = function (jsonStr) {
         } else {
             fallbackCopyTextToClipboard(shareableUrl);
         }
+        
+        // Update URL hash LAST
+        history.pushState(null, '', url);
     } catch (err) {
         console.error('[PresetShare] Error during preset sharing:', err);
     }
