@@ -59,10 +59,14 @@ function fallbackCopyTextToClipboard(text) {
 
     try {
         var successful = document.execCommand('copy');
+        if (!successful) {
+            window.prompt("Press Ctrl+C or Cmd+C to copy the link:", text);
+        }
         var msg = successful ? 'successful' : 'unsuccessful';
         console.log('[PresetShare] Fallback copy ' + msg);
     } catch (err) {
         console.error('[PresetShare] Fallback copy failed', err);
+        window.prompt("Press Ctrl+C or Cmd+C to copy the link:", text);
     }
     document.body.removeChild(textArea);
 }

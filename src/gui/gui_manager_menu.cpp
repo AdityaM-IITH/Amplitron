@@ -120,14 +120,35 @@ void GuiManager::render_menu_bar() {
                 if (!json_string.empty()) {
 #ifdef __EMSCRIPTEN__
                     // Web build — use browser Clipboard API
-                    EM_ASM({
-                        var text = UTF8ToString($0);
-                        navigator.clipboard.writeText(text).then(function() {
-                            // success
-                        }).catch(function(err) {
-                            console.error("Clipboard write failed: ", err);
-                        });
-                    }, json_string.c_str());
+                      EM_ASM({
+                          var text = UTF8ToString($0);
+                          if (navigator.clipboard && window.isSecureContext) {
+                              navigator.clipboard.writeText(text).then(function() {
+                                  // success
+                              }).catch(function(err) {
+                                  console.error("Clipboard write failed: ", err);
+                                  window.prompt("Press Ctrl+C or Cmd+C to copy the preset JSON:", text);
+                              });
+                          } else {
+                              try {
+                                  var textArea = document.createElement("textarea");
+                                  textArea.value = text;
+                                  textArea.style.top = "0";
+                                  textArea.style.left = "0";
+                                  textArea.style.position = "fixed";
+                                  document.body.appendChild(textArea);
+                                  textArea.focus();
+                                  textArea.select();
+                                  var successful = document.execCommand('copy');
+                                  if (!successful) {
+                                      window.prompt("Press Ctrl+C or Cmd+C to copy the preset JSON:", text);
+                                  }
+                                  document.body.removeChild(textArea);
+                              } catch (err) {
+                                  window.prompt("Press Ctrl+C or Cmd+C to copy the preset JSON:", text);
+                              }
+                          }
+                      }, json_string.c_str());
 #else
                     // Native build — ImGui clipboard works fine
                     ImGui::SetClipboardText(json_string.c_str());
