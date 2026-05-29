@@ -87,7 +87,8 @@ jobs:
             web-build/index.wasm \
             web-build/index.data \
             web-build/*.worker.js \
-            web-build/coi-serviceworker.js
+            web-build/coi-serviceworker.js \
+            web-build/presetSharing.js
           do
             [ -e "$file" ] && cp "$file" preview/
           done
