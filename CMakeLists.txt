@@ -443,14 +443,11 @@ if(EMSCRIPTEN)
         SUFFIX ".html"
     )
 
-    # Copy coi-serviceworker.js and presetSharing.js next to the build output for SharedArrayBuffer and preset sharing support
+    # Copy coi-serviceworker.js next to the build output for SharedArrayBuffer support
     add_custom_command(TARGET Amplitron POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_SOURCE_DIR}/web/coi-serviceworker.js"
             "$<TARGET_FILE_DIR:Amplitron>/coi-serviceworker.js"
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_SOURCE_DIR}/web/presetSharing.js"
-            "$<TARGET_FILE_DIR:Amplitron>/presetSharing.js"
     )
 
 elseif(ANDROID)
