@@ -26,11 +26,11 @@
 #include "audio/effects/dynamics/noise_gate.h"
 #include "audio/effects/eq_filter/equalizer.h"
 #include "audio/effects/modulation/chorus.h"
-#include "presets/preset_json.h"
 #include "cli.h"
 #include "gui/commands/command_graph.h"
 #include "gui/commands/command_history.h"
 #include "preset_manager.h"
+#include "presets/preset_json.h"
 
 // New include for Autosave
 #include "session_manager.h"
@@ -130,7 +130,8 @@ extern "C" EMSCRIPTEN_KEEPALIVE void import_preset_json(const char* json_str) {
             if (Amplitron::PresetManager::graph_from_json(repackaged_json, g_engine_ptr->graph())) {
                 std::vector<std::shared_ptr<Amplitron::Effect>> loaded_effects;
                 for (const auto& node : g_engine_ptr->graph().get_nodes()) {
-                    if (node.routing_type == Amplitron::NodeRoutingType::StandardEffect && node.pedal != nullptr) {
+                    if (node.routing_type == Amplitron::NodeRoutingType::StandardEffect &&
+                        node.pedal != nullptr) {
                         loaded_effects.push_back(node.pedal);
                     }
                 }
@@ -278,7 +279,6 @@ extern "C" EMSCRIPTEN_KEEPALIVE bool trigger_delete_last_node() {
     }
     return false;  // No deletable node found
 }
-
 
 #endif
 
@@ -448,10 +448,7 @@ int main(int argc, char* argv[]) {
 
     // Synchronously hydrate preset before the first frame is rendered
     EM_ASM(
-        if (typeof window.hydrateSharedPreset === 'function') {
-            window.hydrateSharedPreset();
-        }
-    );
+        if (typeof window.hydrateSharedPreset == = 'function') { window.hydrateSharedPreset(); });
     emscripten_set_main_loop(em_main_loop, 0, 1);
 #else
     std::atomic<bool> show_telemetry{true};

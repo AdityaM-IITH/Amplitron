@@ -93,7 +93,7 @@ TEST_F(PresetTest, e2e_preset_workflow_roundtrip_and_processing) {
     // samples at 48 kHz) has sufficient time to fully open before we measure.
     const int num_frames = 512;
     std::vector<float> input(num_frames);
-    std::vector<float> output(num_frames * 2, 0.0f); // stereo interleaved
+    std::vector<float> output(num_frames * 2, 0.0f);  // stereo interleaved
     for (int i = 0; i < num_frames; ++i) {
         input[i] = std::sin(2.0f * 3.14159f * 440.0f * i / 48000.0f);
     }

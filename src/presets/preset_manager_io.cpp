@@ -125,10 +125,8 @@ std::string PresetManager::preset_to_json_string(IAudioEngine &engine) {
     return to_json_ext(preset);
 }
 
-bool PresetManager::save_preset(const std::string &filepath,
-                                const std::string &preset_name,
-                                const std::string &description,
-                                IAudioEngine &engine,
+bool PresetManager::save_preset(const std::string &filepath, const std::string &preset_name,
+                                const std::string &description, IAudioEngine &engine,
                                 const std::vector<MidiMapping> &midi_mappings) {
     std::string json_str = preset_to_json_string(engine);
     // Re-parse it into PresetData to inject name, description, and midi_mappings
