@@ -6,9 +6,9 @@
  * run_frame() require SDL+OpenGL and are not exercised here.
  */
 #include "amplitron_session.h"
+#include "gui/gui_manager.h"
 #include "test_fixtures.h"
 #include "test_framework.h"
-#include "gui/gui_manager.h"
 
 namespace Amplitron {
 struct GuiManagerTestAccessor {
@@ -23,7 +23,7 @@ struct GuiManagerTestAccessor {
     static SnapshotsProps build_snapshots_props(GuiManager& g) { return g.build_snapshots_props(); }
     static AudioMetricsService& get_metrics_service(GuiManager& g) { return g.metrics_service_; }
 };
-}
+}  // namespace Amplitron
 
 using namespace Amplitron;
 
@@ -181,8 +181,9 @@ TEST(gui_manager_logical_builders) {
     // 4. build_analyzer_props
     {
         auto p = GuiManagerTestAccessor::build_analyzer_props(gui);
-        ASSERT_TRUE(p.spectrum.smoothed_input_db ==
-                    GuiManagerTestAccessor::get_metrics_service(gui).spectrum_analyzer().smoothed_input_db());
+        ASSERT_TRUE(p.spectrum.smoothed_input_db == GuiManagerTestAccessor::get_metrics_service(gui)
+                                                        .spectrum_analyzer()
+                                                        .smoothed_input_db());
         p.on_set_analyzer_enabled(true);
     }
 
