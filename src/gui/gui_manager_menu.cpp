@@ -186,13 +186,15 @@ void GuiManager::render_menu_bar() {
             if (ImGui::MenuItem("Share current pedalboard")) {
                 std::string json_string = gui_presets_.serialise_current_preset_to_json();
                 if (!json_string.empty()) {
+                    // clang-format off
                     EM_ASM(
                         {
-                            if (typeof window.sharePresetToUrl == = 'function') {
+                            if (typeof window.sharePresetToUrl === 'function') {
                                 window.sharePresetToUrl(UTF8ToString($0));
                             }
                         },
                         json_string.c_str());
+                    // clang-format on
                     toast_message_ = "Link copied to clipboard!";
                     toast_timer_ = 2.0f;
                 }
