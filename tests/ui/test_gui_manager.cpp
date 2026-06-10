@@ -207,3 +207,15 @@ TEST(gui_manager_logical_builders) {
     gui.shutdown();
     engine.shutdown();
 }
+
+TEST(gui_manager_force_rebuild_pedal_widgets) {
+    AmplitronSession session;
+    auto& engine = session.concrete_engine();
+    engine.initialize();
+
+    GuiManager gui(session);
+    gui.force_rebuild_pedal_widgets();
+
+    gui.shutdown();
+    engine.shutdown();
+}
