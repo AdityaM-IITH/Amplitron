@@ -25,7 +25,7 @@ endif()
 
 # Compiler flags
 if(EMSCRIPTEN)
-    add_compile_options(-O3 -ffast-math -pthread "-sUSE_SDL=2" -Wno-nontrivial-memaccess)
+    add_compile_options(-O2 -ffast-math -pthread "-sUSE_SDL=2" -Wno-nontrivial-memaccess)
 elseif(MSVC)
     add_compile_options(/W4 /fp:fast)
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
