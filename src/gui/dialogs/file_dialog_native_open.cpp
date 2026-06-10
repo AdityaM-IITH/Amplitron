@@ -7,12 +7,11 @@
 
 #include "gui/dialogs/file_dialog.h"
 
-#ifdef _WIN32
 // clang-format off
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <commdlg.h>
-// clang-format on
 #endif
 
 #ifdef __APPLE__
@@ -27,15 +26,21 @@
 #ifndef _WIN32
 #include <sys/wait.h>
 #endif
+// clang-format on
 
 namespace Amplitron {
 
 #ifdef AMPLITRON_HEADLESS
-std::string show_open_dialog(const std::string&, const std::string&, const std::string&) {
-    return "";
+static std::string s_mock_open_path = "";
+
+void set_mock_open_dialog_path(const std::string &path) { s_mock_open_path = path; }
+
+std::string show_open_dialog(const std::string &, const std::string &, const std::string &) {
+    return s_mock_open_path;
 }
 #else
 
+// clang-format off
 #ifdef _WIN32
 std::string show_open_dialog(const std::string& title, const std::string& filter_desc,
                              const std::string& filter_ext) {
@@ -195,6 +200,7 @@ std::string show_open_dialog(const std::string& title, const std::string& filter
     return result;
 }
 #endif
+// clang-format on
 
 #endif  // AMPLITRON_HEADLESS
 

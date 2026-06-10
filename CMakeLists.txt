@@ -754,6 +754,7 @@ else() # NOT EMSCRIPTEN, ANDROID, or IOS
         tests/unit/test_looper.cpp
         tests/unit/test_theme.cpp
         tests/unit/test_command_history.cpp
+        tests/unit/test_effect_base.cpp
         tests/unit/test_cabinet_sim_ir.cpp
         tests/unit/test_wav_loader.cpp
         tests/unit/test_convolution_engine.cpp
@@ -789,6 +790,7 @@ else() # NOT EMSCRIPTEN, ANDROID, or IOS
         tests/ui/test_screen.cpp
         tests/ui/test_pedal_board_chain.cpp
         tests/ui/test_pedal_board_menu.cpp
+        tests/ui/test_file_dialog.cpp
         tests/ui/test_pedal_widget_knobs.cpp
         tests/unit/test_session_manager.cpp
         tests/unit/test_cli.cpp
