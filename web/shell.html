@@ -483,7 +483,7 @@
             } else {
                 fallbackCopyTextToClipboard(shareableUrl);
             }
-            
+
             // Update URL hash LAST
             history.pushState(null, '', url);
         } catch (err) {
@@ -528,7 +528,7 @@
             try {
                 console.log('[PresetShare] Shared preset detected. Decompressing...');
                 const decompressedJson = LZString.decompressFromEncodedURIComponent(presetPayload);
-                
+
                 if (decompressedJson && decompressedJson.length <= MAX_DECOMPRESSED_PRESET_LEN) {
                     // Pass JSON string to C++ for deserialization
                     Module.ccall(
@@ -538,7 +538,7 @@
                         [decompressedJson]
                     );
                     console.log('[PresetShare] Preset successfully re-hydrated.');
-                    
+
                     // Clear URL to prevent re-hydration on refresh
                     const url = new URL(window.location);
                     const hashParams = new URLSearchParams(url.hash.replace('#', ''));
