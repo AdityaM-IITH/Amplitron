@@ -62,6 +62,8 @@ class GuiManager {
     CommandHistory& command_history() { return command_history_; }
 
    private:
+    friend struct GuiManagerTestAccessor;
+
     // ── Menu bar ──
     void render_menu_bar();
 
