@@ -447,8 +447,13 @@ int main(int argc, char* argv[]) {
     g_engine_ptr = &engine;
 
     // Synchronously hydrate preset before the first frame is rendered
+    // clang-format off
     EM_ASM(
-        if (typeof window.hydrateSharedPreset == = 'function') { window.hydrateSharedPreset(); });
+        if (typeof window.hydrateSharedPreset === 'function') {
+            window.hydrateSharedPreset();
+        }
+    );
+    // clang-format on
     emscripten_set_main_loop(em_main_loop, 0, 1);
 #else
     std::atomic<bool> show_telemetry{true};
