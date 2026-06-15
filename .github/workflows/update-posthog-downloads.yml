@@ -8,6 +8,7 @@ on:
 
 jobs:
   update-posthog:
+    if: github.repository == 'sudip-mondal-2002/Amplitron'
     runs-on: ubuntu-latest
     steps:
       - name: Sync downloads from GitHub
